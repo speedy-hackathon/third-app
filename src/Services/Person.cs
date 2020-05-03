@@ -1,5 +1,6 @@
 using System;
 using covidSim.Models;
+using System.Linq;
 
 namespace covidSim.Services
 {
@@ -57,7 +58,7 @@ namespace covidSim.Services
             var delta = new Vec(xLength * direction.X, yLength * direction.Y);
             var nextPosition = new Vec(Position.X + delta.X, Position.Y + delta.Y);
 
-            if (isCoordInField(nextPosition))
+            if (isCoordInField(nextPosition) && !IsPersonComeInOtherHome(nextPosition))
             {
                 Position = nextPosition;
             }
@@ -94,6 +95,15 @@ namespace covidSim.Services
             var newY = Position.Y + yLength * direction.Y;
             Position = new Vec(newX, newY);
         }
+
+		private bool IsPersonComeInOtherHome(Vec vec)
+		{
+			var game = Game.Instance;
+			var home = game.Map.Houses.Where(house => house.IsPersonInHouse(vec.X, vec.Y)).FirstOrDefault();
+			if (home == null || home.Id == HomeId)
+				return false;
+			return true;
+		}
 
         public void GoHome()
         {
