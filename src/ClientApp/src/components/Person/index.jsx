@@ -6,10 +6,12 @@ import { MAX_HEIGHT, MAX_WIDTH } from "../../consts/sizes";
 export default function Person({ person, onClick }) {
     const x = person.position.x / MAX_WIDTH * 100;
     const y = person.position.y / MAX_HEIGHT * 100;
-    let colorStyle = styles.healthy;
-    if (person.isSick)
+    var colorStyle = styles.healthy;
+    if (person.mood === "Bored")
+        colorStyle = styles.bored;
+    if (person.isSick) 
         colorStyle = styles.sick;
-    else if (person.isDead)
+    if (person.isDead)
         colorStyle = styles.dead;
     return (
         <div

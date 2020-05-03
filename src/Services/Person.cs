@@ -10,17 +10,24 @@ namespace covidSim.Services
         private const int MaxDistancePerTurn = 30;
         private static Random random = new Random();
         private PersonState state = PersonState.AtHome;
+        internal PersonState State => state;
         private Rectangle home;
         private int sickStepsCount = 0;
+
+        public PersonMood Mood { get; private set; } = PersonMood.Normal;
+        private int atHomeCount;
+
         public int DeadStepsCount = 0;
+
 
         private const int StepsToRecoveryCount = 35;
 
-        public Person(int id, int homeId, CityMap map, bool isSick)
+        public Person(int id, int homeId, CityMap map)
         {
             Id = id;
             HomeId = homeId;
-            IsSick = isSick;
+            atHomeCount = 0;
+
             var homeCoords = map.Houses[homeId].Coordinates.LeftTopCorner;
             home = new Rectangle(homeCoords.X, homeCoords.Y, HouseCoordinates.Width, HouseCoordinates.Height);
             var x = homeCoords.X + random.Next(HouseCoordinates.Width);
@@ -28,6 +35,7 @@ namespace covidSim.Services
             Position = new Vec(x, y);
         }
 
+        public string Status;
         public int Id;
         public int HomeId;
         public Vec Position;
@@ -73,10 +81,15 @@ namespace covidSim.Services
             if (goingWalk)
             {
                 state = PersonState.Walking;
+                atHomeCount = 0;
+                Mood = PersonMood.Normal;
                 CalcNextPositionForWalkingPerson();
             }
             else
             {
+                atHomeCount++;
+                if (atHomeCount == 5)
+                    Mood = PersonMood.Bored;
                 var nextPosition = CalculateHomeMovement();
                 while (!home.Contains(nextPosition.X, nextPosition.Y))
                     nextPosition = CalculateHomeMovement();
@@ -176,6 +189,14 @@ namespace covidSim.Services
             var beyondField = vec.X > Game.FieldWidth || vec.Y > Game.FieldHeight;
 
             return !(belowZero || beyondField);
+        }
+        
+        public void GetInfected()
+        {
+            if (random.NextDouble() > 0.5)
+            {
+                IsSick = true;
+            }
         }
     }
 }

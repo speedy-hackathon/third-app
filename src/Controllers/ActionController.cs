@@ -13,6 +13,7 @@ namespace covidSim.Controllers
             var game = Game.Instance;
             var person = game.People.Find(p => p.Id == userAction.PersonClicked);
             person.GoHome();
+            game.InfectNeighbors();
             return NoContent();
         }
 

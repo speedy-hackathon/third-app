@@ -37,7 +37,7 @@ namespace covidSim.Services
         {
             var population = Enumerable
                 .Repeat(0, PeopleCount)
-                .Select((_, index) => new Person(index, FindHome(), Map, index <= PeopleCount * 0.03))
+                .Select((_, index) => new Person(index, FindHome(), Map))
                 .ToList();
             InfectPopulation(population);
             return population;
@@ -90,6 +90,20 @@ namespace covidSim.Services
             foreach (var person in toDelete)
             {
                 People.Remove(person);
+            }
+        }
+
+        public void InfectNeighbors()
+        {
+            var houses = People
+                        .Where(p => p.IsSick && p.State == PersonState.AtHome)
+                        .Select(p => p.HomeId);
+
+            foreach (var homeId in houses)
+            {
+                foreach (var person in People.Where(p => p.State == PersonState.AtHome && p.HomeId == homeId))
+                    person.GetInfected();
+
             }
         }
     }
