@@ -13,7 +13,7 @@ namespace covidSim.Services
         private static Game _gameInstance;
         private static Random _random = new Random();
 
-        public const float InfectedPeoplePercent = 0.03f;
+        public const float InfectedPeoplePossibility = 0.03f;
         public const int PeopleCount = 320;
         public const int FieldWidth = 1000;
         public const int FieldHeight = 500;
@@ -40,7 +40,7 @@ namespace covidSim.Services
      
         private void InfectPopulation(List<Person> population)
         {
-            var peopleToInfect = (int)(population.Count * InfectedPeoplePercent);
+            var peopleToInfect = (int)(population.Count * InfectedPeoplePossibility);
             foreach (var person in population.Take(peopleToInfect))
                 person.IsInfected = true;
         }
