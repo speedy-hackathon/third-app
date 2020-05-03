@@ -30,6 +30,7 @@ namespace covidSim.Services
             Position = new Vec(x, y);
         }
 
+        public string Status;
         public int Id;
         public int HomeId;
         public Vec Position;
