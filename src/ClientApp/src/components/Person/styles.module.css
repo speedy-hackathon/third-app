@@ -13,8 +13,10 @@
 .healthy {
     background-color: #d2b1e7;
 }
-
 .sick {
     background-color: #cf1717;
+}
+.bored {
+    background-color: blue;
 }
 
