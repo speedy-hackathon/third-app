@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using covidSim.Models;
 using System.Linq;
 
@@ -9,6 +10,7 @@ namespace covidSim.Services
         private const int MaxDistancePerTurn = 30;
         private static Random random = new Random();
         private PersonState state = PersonState.AtHome;
+        private Rectangle home;
 
         public Person(int id, int homeId, CityMap map, bool isInfected)
         {
@@ -16,6 +18,7 @@ namespace covidSim.Services
             HomeId = homeId;
             IsInfected = isInfected;
             var homeCoords = map.Houses[homeId].Coordinates.LeftTopCorner;
+            home = new Rectangle(homeCoords.X, homeCoords.Y, HouseCoordinates.Width, HouseCoordinates.Height);
             var x = homeCoords.X + random.Next(HouseCoordinates.Width);
             var y = homeCoords.Y + random.Next(HouseCoordinates.Height);
             Position = new Vec(x, y);
@@ -45,10 +48,28 @@ namespace covidSim.Services
         private void CalcNextStepForPersonAtHome()
         {
             var goingWalk = random.NextDouble() < 0.005;
-            if (!goingWalk) return;
+            if (goingWalk)
+            {
+                state = PersonState.Walking;
+                CalcNextPositionForWalkingPerson();
+            }
+            else
+            {
+                var nextPosition = CalculateHomeMovement();
+                while (!home.Contains(nextPosition.X, nextPosition.Y))
+                    nextPosition = CalculateHomeMovement();
+                Position = nextPosition;
+            }
+        }
 
-            state = PersonState.Walking;
-            CalcNextPositionForWalkingPerson();
+        private Vec CalculateHomeMovement()
+        {
+            var xLength = random.Next(MaxDistancePerTurn);
+            var yLength = MaxDistancePerTurn - xLength;
+            var direction = ChooseDirection();
+            var delta = new Vec(xLength * direction.X, yLength * direction.Y);
+            var nextPosition = new Vec(Position.X + delta.X, Position.Y + delta.Y);
+            return nextPosition;
         }
 
         private void CalcNextPositionForWalkingPerson()
