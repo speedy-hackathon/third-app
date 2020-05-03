@@ -12,6 +12,7 @@ namespace covidSim.Services
         private PersonState state = PersonState.AtHome;
         private Rectangle home;
         private int sickStepsCount = 0;
+        public int DeadStepsCount = 0;
 
         private const int StepsToRecoveryCount = 35;
 
@@ -31,10 +32,16 @@ namespace covidSim.Services
         public int HomeId;
         public Vec Position;
         public bool IsSick;
-
+        public bool isDead;
+        
 
         public void CalcNextStep()
         {
+            if (isDead)
+            {
+                DeadStepsCount++;
+                return;
+            }
             switch (state)
             {
                 case PersonState.AtHome:
@@ -49,6 +56,9 @@ namespace covidSim.Services
             }
             if (IsSick)
             {
+                isDead = random.NextDouble() < 0.000003;
+                if (isDead)
+                    return;
                 sickStepsCount++;
                 if (sickStepsCount >= StepsToRecoveryCount) {
                     sickStepsCount = 0;
