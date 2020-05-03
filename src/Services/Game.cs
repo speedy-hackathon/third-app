@@ -84,5 +84,19 @@ namespace covidSim.Services
                 person.CalcNextStep();
             }
         }
+
+        public void InfectNeighbors()
+        {
+            var houses = People
+                        .Where(p => p.IsSick && p.State == PersonState.AtHome)
+                        .Select(p => p.HomeId);
+
+            foreach (var homeId in houses)
+            {
+                foreach (var person in People.Where(p => p.State == PersonState.AtHome && p.HomeId == homeId))
+                    person.GetInfected();
+
+            }
+        }
     }
 }

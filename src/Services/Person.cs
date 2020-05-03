@@ -10,6 +10,7 @@ namespace covidSim.Services
         private const int MaxDistancePerTurn = 30;
         private static Random random = new Random();
         private PersonState state = PersonState.AtHome;
+        internal PersonState State => state;
         private Rectangle home;
         private int sickStepsCount = 0;
         public PersonMood Mood { get; private set; } = PersonMood.Normal;
@@ -175,6 +176,14 @@ namespace covidSim.Services
             var beyondField = vec.X > Game.FieldWidth || vec.Y > Game.FieldHeight;
 
             return !(belowZero || beyondField);
+        }
+        
+        public void GetInfected()
+        {
+            if (random.NextDouble() > 0.5)
+            {
+                IsSick = true;
+            }
         }
     }
 }
