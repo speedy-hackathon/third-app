@@ -5,6 +5,7 @@ import { DELAY, MAX_HEIGHT, MAX_WIDTH } from '../../consts/sizes';
 import { gameStateUrl, userActionUrl } from '../../consts/urls';
 import errorHandler from "../../utils/errorHandler";
 import Instruction from "../Instruction";
+import { Button } from 'reactstrap';
 
 import './base.css'
 
@@ -30,13 +31,25 @@ export default class App extends React.Component {
         return (
             <div className={ styles.root }>
                 { instructionOpen && <Instruction onClose={ this.closeInstruction }/> }
-                <h1 className={ styles.title }>COVID-симулятор</h1>
+                <h1 className={styles.title}>COVID-симулятор</h1>
+                <Button variant="" onClick={this.restartClick}>
+                    Restart Game
+                </Button>
                 <Field
                     map={ map }
                     people={ people }
                     onClick={ this.personClick }/>
             </div>
         );
+    }
+
+    restartClick = () => {
+        fetch('/api/action/reset/', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }).then(errorHandler)
     }
 
     closeInstruction = () => {
