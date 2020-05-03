@@ -12,6 +12,8 @@ namespace covidSim.Services
         private PersonState state = PersonState.AtHome;
         private int sickStepsCount = 0;
 
+        private const int StepsToRecoveryCount = 35;
+
         public Person(int id, int homeId, CityMap map, bool isSick)
         {
             Id = id;
@@ -48,7 +50,7 @@ namespace covidSim.Services
             if (IsSick)
             {
                 sickStepsCount++;
-                if (sickStepsCount >= 35) {
+                if (sickStepsCount >= StepsToRecoveryCount) {
                     sickStepsCount = 0;
                     IsSick = false;
                 }
