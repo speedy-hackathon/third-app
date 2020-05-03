@@ -12,6 +12,7 @@ namespace covidSim.Services
 
         private static Game _gameInstance;
         private static Random _random = new Random();
+        public const float InfectedPeoplePossibility = 0.03f;
         public const int PeopleCount = 320;
         public const int FieldWidth = 1000;
         public const int FieldHeight = 500;
@@ -46,7 +47,7 @@ namespace covidSim.Services
         {
             var peopleToInfect = (int)(population.Count * InfectedPeoplePossibility);
             foreach (var person in population.Take(peopleToInfect))
-                person.IsInfected = true;
+                person.IsSick = true;
         }
 
         private int FindHome()
