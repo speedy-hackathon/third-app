@@ -10,13 +10,15 @@ namespace covidSim.Services
         private const int MaxDistancePerTurn = 30;
         private static Random random = new Random();
         private PersonState state = PersonState.AtHome;
-        private Rectangle home;
+        private int sickStepsCount = 0;
 
-        public Person(int id, int homeId, CityMap map, bool isInfected)
+        private const int StepsToRecoveryCount = 35;
+
+        public Person(int id, int homeId, CityMap map, bool isSick)
         {
             Id = id;
             HomeId = homeId;
-            IsInfected = isInfected;
+            IsSick = isSick;
             var homeCoords = map.Houses[homeId].Coordinates.LeftTopCorner;
             home = new Rectangle(homeCoords.X, homeCoords.Y, HouseCoordinates.Width, HouseCoordinates.Height);
             var x = homeCoords.X + random.Next(HouseCoordinates.Width);
@@ -27,10 +29,12 @@ namespace covidSim.Services
         public int Id;
         public int HomeId;
         public Vec Position;
-        public bool IsInfected;
-        
+        public bool IsSick;
+
         public void CalcNextStep()
         {
+
+
             switch (state)
             {
                 case PersonState.AtHome:
@@ -42,6 +46,14 @@ namespace covidSim.Services
                 case PersonState.GoingHome:
                     CalcNextPositionForGoingHomePerson();
                     break;
+            }
+            if (IsSick)
+            {
+                sickStepsCount++;
+                if (sickStepsCount >= StepsToRecoveryCount) {
+                    sickStepsCount = 0;
+                    IsSick = false;
+                }
             }
         }
 
@@ -111,7 +123,7 @@ namespace covidSim.Services
 
             var direction = new Vec(Math.Sign(xDiff), Math.Sign(yDiff));
 
-            var xLength = Math.Min(xDistance, MaxDistancePerTurn); 
+            var xLength = Math.Min(xDistance, MaxDistancePerTurn);
             var newX = Position.X + xLength * direction.X;
             var yLength = MaxDistancePerTurn - xLength;
             var newY = Position.Y + yLength * direction.Y;
