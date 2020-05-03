@@ -6,10 +6,12 @@ import { MAX_HEIGHT, MAX_WIDTH } from "../../consts/sizes";
 export default function Person({ person, onClick }) {
     const x = person.position.x / MAX_WIDTH * 100;
     const y = person.position.y / MAX_HEIGHT * 100;
+    const red = '#FF0000';
+    const pink = '#d2b1e7';
     return (
         <div
             className={ styles.root }
-            style={{ left: `${ x }%`, top: `${ y }%` }}
+            style={{ left: `${ x }%`, top: `${ y }%`,  background: person.isInfected? red: pink }}
             onClick={ () => onClick(person.id) }
         />
     );

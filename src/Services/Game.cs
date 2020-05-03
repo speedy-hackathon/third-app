@@ -12,7 +12,8 @@ namespace covidSim.Services
 
         private static Game _gameInstance;
         private static Random _random = new Random();
-        
+
+        public const int InfectedPeoplePercent = 3;
         public const int PeopleCount = 320;
         public const int FieldWidth = 1000;
         public const int FieldHeight = 500;
@@ -29,10 +30,19 @@ namespace covidSim.Services
 
         private List<Person> CreatePopulation()
         {
-            return Enumerable
+            var population = Enumerable
                 .Repeat(0, PeopleCount)
-                .Select((_, index) => new Person(index, FindHome(), Map))
+                .Select((_, index) => new Person(index, FindHome(), Map, false))
                 .ToList();
+            InfectPopulation(population);
+            return population;
+        }
+     
+        private void InfectPopulation(List<Person> population)
+        {
+            int peopleToInfect = (int)(population.Count * (InfectedPeoplePercent / 100));
+            foreach (var person in population.Take(peopleToInfect))
+                person.IsInfected = true;
         }
 
         private int FindHome()

@@ -10,11 +10,11 @@ namespace covidSim.Services
         private static Random random = new Random();
         private PersonState state = PersonState.AtHome;
 
-        public Person(int id, int homeId, CityMap map)
+        public Person(int id, int homeId, CityMap map, bool isInfected)
         {
             Id = id;
             HomeId = homeId;
-
+            IsInfected = isInfected;
             var homeCoords = map.Houses[homeId].Coordinates.LeftTopCorner;
             var x = homeCoords.X + random.Next(HouseCoordinates.Width);
             var y = homeCoords.Y + random.Next(HouseCoordinates.Height);
@@ -24,7 +24,8 @@ namespace covidSim.Services
         public int Id;
         public int HomeId;
         public Vec Position;
-
+        public bool IsInfected;
+        
         public void CalcNextStep()
         {
             switch (state)
