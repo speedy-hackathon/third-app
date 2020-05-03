@@ -79,9 +79,17 @@ namespace covidSim.Services
         private void CalcNextStep()
         {
             _lastUpdate = DateTime.Now;
+            var toDelete = new List<Person>();
             foreach (var person in People)
             {
                 person.CalcNextStep();
+                if (person.isDead && person.DeadStepsCount >= 10)
+                    toDelete.Add(person);
+            }
+
+            foreach (var person in toDelete)
+            {
+                People.Remove(person);
             }
         }
 

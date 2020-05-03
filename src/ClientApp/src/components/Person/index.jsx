@@ -11,6 +11,8 @@ export default function Person({ person, onClick }) {
         colorStyle = styles.bored;
     if (person.isSick) 
         colorStyle = styles.sick;
+    if (person.isDead)
+        colorStyle = styles.dead;
     return (
         <div
             className={`${styles.root} ${colorStyle}`}
