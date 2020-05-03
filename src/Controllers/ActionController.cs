@@ -15,5 +15,12 @@ namespace covidSim.Controllers
             person.GoHome();
             return NoContent();
         }
+
+        [HttpPost]
+        [Route("Reset")]
+        public IActionResult Reset()
+        {
+            return Ok(Game.Reset());
+        }
     }
 }
