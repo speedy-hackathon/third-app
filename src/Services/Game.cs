@@ -29,9 +29,10 @@ namespace covidSim.Services
 
         private List<Person> CreatePopulation()
         {
+            var random = new Random();
             return Enumerable
                 .Repeat(0, PeopleCount)
-                .Select((_, index) => new Person(index, FindHome(), Map))
+                .Select((_, index) => new Person(index, FindHome(), Map, random.NextDouble() <= 0.03 ? "fee" : "ok"))
                 .ToList();
         }
 

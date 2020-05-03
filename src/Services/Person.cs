@@ -9,10 +9,11 @@ namespace covidSim.Services
         private static Random random = new Random();
         private PersonState state = PersonState.AtHome;
 
-        public Person(int id, int homeId, CityMap map)
+        public Person(int id, int homeId, CityMap map, string status)
         {
             Id = id;
             HomeId = homeId;
+            Status = status;
 
             var homeCoords = map.Houses[homeId].Coordinates.LeftTopCorner;
             var x = homeCoords.X + random.Next(HouseCoordinates.Width);
@@ -20,6 +21,7 @@ namespace covidSim.Services
             Position = new Vec(x, y);
         }
 
+        public string Status;
         public int Id;
         public int HomeId;
         public Vec Position;
