@@ -15,7 +15,6 @@ namespace covidSim.Services
             Id = id;
             HomeId = homeId;
             Status = status;
-
             var homeCoords = map.Houses[homeId].Coordinates.LeftTopCorner;
             var x = homeCoords.X + random.Next(HouseCoordinates.Width);
             var y = homeCoords.Y + random.Next(HouseCoordinates.Height);
@@ -26,7 +25,8 @@ namespace covidSim.Services
         public int Id;
         public int HomeId;
         public Vec Position;
-
+        public bool IsInfected;
+        
         public void CalcNextStep()
         {
             switch (state)
